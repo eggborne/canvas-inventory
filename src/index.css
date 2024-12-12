@@ -5,7 +5,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -26,8 +25,35 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
+}
+
+button,
+input {
+  cursor: pointer;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+button.add-button {
+  background-color: rgb(80, 148, 65);
+  font-size: 125%;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+}
+button.save-button {
+  background-color: rgb(80, 148, 65);
+  font-size: 150%;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  margin-top: 2rem;
+}
+
+button.edit-button {
+  background-color: rgb(219, 219, 133);
 }
 
 body {
@@ -41,15 +67,56 @@ h1 {
   line-height: 1.1;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #ddd;
+  color: #333;
+  border-radius: 5px;
+  max-width: 500px;
+
+  & header {
+    color: #eee;
   }
-  a:hover {
-    color: #747bff;
+
+  & form {
+    display: flex;
+    flex-direction: column;
+    
+    gap: 0.5rem;
+    padding: 1rem;
+
+    & .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+
+      &.multi {
+        margin-bottom: 1.5rem;
+        font-size: 90%;
+      } 
+    }
+
+    input, textarea {
+      width: 10rem;
+      padding: 0.5rem 1rem;
+    }
   }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+.modal-content>form input[type='number'] {
+  min-width: unset;
+  width: 2rem;
 }
