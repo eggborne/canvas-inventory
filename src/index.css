@@ -42,6 +42,7 @@ button.add-button {
   font-size: 125%;
   color: #ccc;
   padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
 }
 button.save-button {
   background-color: rgb(80, 148, 65);

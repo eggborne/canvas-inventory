@@ -5,14 +5,17 @@
 		echo 'no post data';
 		mysqli_close($link);
 	}
-	$location = $postData['location'];
-	$origin = $postData['origin'];
-	$height = $postData['height'];
-	$width = $postData['width'];
-	$depth = $postData['depth'];
-	$packaging = $postData['packaging'];
-	$notes = $postData['notes'];
-	$addItemSql = "INSERT INTO `inventory` (`location`, `origin`, `height`, `width`, `depth`, `packaging`, `notes`) VALUES ( '$location' '$origin' '$height' '$width' '$depth' '$packaging' '$notes' );";
+	$location = mysqli_real_escape_string($link, $postData['location']);
+	$origin = mysqli_real_escape_string($link, $postData['origin'] ?? '');
+	$height = floatval($postData['height']);
+	$width = floatval($postData['width']);
+	$depth = floatval($postData['depth']);
+	$packaging = mysqli_real_escape_string($link, $postData['packaging'] ?? '');
+	$notes = mysqli_real_escape_string($link, $postData['notes'] ?? '');
+	$addItemSql = "INSERT INTO `inventory` 
+    (`location`, `origin`, `height`, `width`, `depth`, `packaging`, `notes`) 
+    VALUES 
+    ('$location', '$origin', $height, $width, $depth, '$packaging', '$notes')";
 	$result = mysqli_query($link, $addItemSql);
 
 	if ($result) {

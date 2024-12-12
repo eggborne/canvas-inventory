@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { addNewItem } from './fetch';
 
 interface ModalProps {
   isOpen: boolean;
@@ -24,11 +25,12 @@ const AddItemModal = ({ isOpen, onClose }: ModalProps) => {
     }
   }, [isOpen]);
 
-  const handleSubmitItemForm = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitItemForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     console.log('got formData', formData)
+    const quantity = parseInt(formData.get('quantity') as string, 10);
     const newItem = {
       width: parseInt(formData.get('width') as string, 10),
       height: parseInt(formData.get('height') as string, 10),
@@ -37,9 +39,12 @@ const AddItemModal = ({ isOpen, onClose }: ModalProps) => {
       origin: formData.get('origin') as string,
       packaging: formData.get('packaging') as string,
       notes: formData.get('notes') as string,
-      quantity: parseInt(formData.get('quantity') as string, 10)
     };
     console.log('new item', newItem);
+    for (let i = 0; i < quantity; i++) {
+      await addNewItem(newItem);
+      console.warn('added a canvas!')
+    }
     onClose();
   }
 
@@ -51,12 +56,12 @@ const AddItemModal = ({ isOpen, onClose }: ModalProps) => {
         <header>New Canvas</header>
         <form onSubmit={handleSubmitItemForm}>
           <div className='form-row multi'>
-            <label htmlFor='width' className='input-label'>Width</label> 
+            <label htmlFor='width' className='input-label'>W</label> 
             <input name='width' id='width' type='number' min='0'></input>
-            <label htmlFor='height' className='input-label'>Height</label> 
+            <label htmlFor='height' className='input-label'>H</label> 
             <input name='height' id='height' type='number' min='0'></input>           
-            <label htmlFor='depth' className='input-label'>Depth</label>
-            <input name='depth' id='depth' type='number' min={0}></input>
+            <label htmlFor='depth' className='input-label'>D</label>
+            <input name='depth' id='depth' type='number' step={0.125} min={0}></input>
           </div>
           <div className='form-row'>
           </div>
@@ -74,7 +79,7 @@ const AddItemModal = ({ isOpen, onClose }: ModalProps) => {
           </div>
           <div className='form-row'>
             <label htmlFor='notes' className='input-label'>Notes</label> 
-            <textarea name='notes' id='notes' rows={6}></textarea>
+            <textarea name='notes' id='notes' rows={4}></textarea>
           </div>
           <div className='form-row'>
             <label htmlFor='quantity' className='input-label'>Quantity</label> 

@@ -34,6 +34,7 @@
 /* Mobile View Styles */
 .mobileView {
   display: grid;
+  display: none;
   gap: 1rem;
 }
 
@@ -58,7 +59,7 @@
 
 /* Desktop View Styles */
 .desktopView {
-  display: none;
+  /* display: none; */
   overflow-x: auto;
 }
 
@@ -75,7 +76,7 @@
 }
 
 table tr.headerRow {
-  outline: 3px solid white;
+  outline: 3px solid #eee;
 }
 
 .table th {

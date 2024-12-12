@@ -22,7 +22,7 @@ const getInventory = async (): Promise<InventoryItem[]> => {
 const addNewItem = async (newItem: InventoryItem): Promise<void> => {
   console.log('sending', newItem);
   try {
-    await axios({
+    const response = await axios({
       method: 'post',
       url: `${API_BASE_URL}/addnewitem.php`,
       data: newItem,
@@ -30,6 +30,15 @@ const addNewItem = async (newItem: InventoryItem): Promise<void> => {
         'Content-Type': 'application/json',
       }
     });
+
+    const result = response.data;
+
+    console.log(response.data)
+
+    if (result.error) {
+      throw new Error(result.error + (result.details ? `: ${result.details}` : ''));
+    }
+
   } catch (error) {
     console.error('Error adding new item:', error);
     throw error;
