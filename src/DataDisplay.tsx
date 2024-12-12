@@ -1,4 +1,4 @@
-import { InventoryItem } from "./types";
+import { InventoryItem, GroupedItem, SortKey, SortDirection } from "./types";
 import { useState, useMemo } from 'react';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import styles from './DataDisplay.module.css';
@@ -7,14 +7,10 @@ type DataDisplayProps = {
   data: InventoryItem[];
 };
 
-type GroupedItem = InventoryItem & { quantity: number };
-type SortKey = 'quantity' | 'location' | 'dimensions' | 'origin' | 'packaging' | 'notes';
-type SortDirection = 'asc' | 'desc';
-
-const DataDisplay: React.FC<DataDisplayProps> = ({ data }) => {
+const DataDisplay = ({ data }: DataDisplayProps) => {
   const [groupIdentical, setGroupIdentical] = useState(true);
-  const [sortKey, setSortKey] = useState<SortKey>('location');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [sortKey, setSortKey] = useState<SortKey>('dimensions');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   const sortData = (items: (InventoryItem | GroupedItem)[], key: SortKey, direction: SortDirection) => {
     return [...items].sort((a, b) => {
@@ -108,7 +104,7 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ data }) => {
               <div className={styles.label}>Origin:</div>
               <div>{item.origin || 'Unknown'}</div>
               <div className={styles.label}>Dimensions:</div>
-              <div>{item.height}″ × {item.width}″ × {item.depth}″</div>
+              <div>{item.height} × {item.width} × {item.depth}</div>
               <div className={styles.label}>Packaging:</div>
               <div>{item.packaging || 'Loose'}</div>
               {item.notes && (

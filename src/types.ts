@@ -9,3 +9,7 @@ export interface InventoryItem {
   notes: string | null;
   quantity?: number;
 }
+
+export type GroupedItem = InventoryItem & { quantity: number };
+export type SortKey = 'quantity' | 'location' | 'dimensions' | 'origin' | 'packaging' | 'notes';
+export type SortDirection = 'asc' | 'desc';
