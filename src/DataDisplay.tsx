@@ -89,7 +89,7 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ data }) => {
             className={styles.toggleInput}
           />
           Group identical items
-        </label>        
+        </label>
       </div>
 
       {/* Mobile view */}
@@ -169,10 +169,10 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ data }) => {
                 <td className={styles.dimensions}>
                   <strong>{item.height}</strong> × <strong>{item.width}</strong> × {item.depth}
                 </td>
-                <td>{item.origin || 'Unknown'}</td>
-                <td>{item.packaging || 'Loose'}</td>
+                <td style={{ fontSize: '85%', lineHeight: 1 }}>{item.origin || 'Unknown'}</td>
+                <td style={{ fontSize: '85%', lineHeight: 1 }}>{item.packaging || 'Loose'}</td>
                 <td>{item.notes || '-'}</td>
-                {!groupIdentical && <td><button className={'edit-button'}type='button'>Edit</button></td>}
+                {!groupIdentical && <td><button className={'edit-button'} type='button'>Edit</button></td>}
               </tr>
             ))}
           </tbody>
