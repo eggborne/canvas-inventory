@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     const fetchInv = async () => {
       const startTime = Date.now();
-      const items = await getInventory();
+      const items = await getInventory(`loren-inventory`);
       setInventoryData(items);
       console.warn(items.length, 'items fetched in', (Date.now() - startTime), 'ms');
     }

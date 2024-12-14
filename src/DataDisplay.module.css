@@ -33,7 +33,7 @@
 /* Mobile View Styles */
 .mobileView {
   display: grid;
-  /* display: none; */
+  display: none;
   gap: 1rem;
 }
 
@@ -58,7 +58,7 @@
 
 /* Desktop View Styles */
 .desktopView {
-  display: none;
+  /* display: none; */
   overflow-x: auto;
 }
 

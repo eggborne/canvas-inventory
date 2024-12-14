@@ -1,13 +1,16 @@
 import axios, { AxiosResponse } from 'axios';
 import { InventoryItem } from './types';
 
-const API_BASE_URL = 'https://mikedonovan.dev/canvas-inventory/php';
+const API_BASE_URL = 'https://visionary.tools/api/inventory';
 
-const getInventory = async (): Promise<InventoryItem[]> => {
+const getInventory = async (inventoryName: string): Promise<InventoryItem[]> => {
   try {
     const response: AxiosResponse<string[]> = await axios({
-      method: 'get',
+      method: 'post',
       url: `${API_BASE_URL}/getinventory.php`,
+      data: {
+        inventoryName
+      },
       headers: {
         'Content-Type': 'application/json',
       }
