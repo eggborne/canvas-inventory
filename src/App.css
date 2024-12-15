@@ -16,6 +16,19 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem;
+
+  & > .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+
+    & > img {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
 }
 
 footer {
@@ -26,6 +39,24 @@ footer {
   background: var(--accent-color);
   font-size: 65%;
   padding: 0.25rem 0;
+}
+
+.user-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  & > .user-avatar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    & > img {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
 }
 
 main {

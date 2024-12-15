@@ -33,7 +33,6 @@
 /* Mobile View Styles */
 .mobileView {
   display: grid;
-  display: none;
   gap: 1rem;
 }
 
@@ -58,7 +57,7 @@
 
 /* Desktop View Styles */
 .desktopView {
-  /* display: none; */
+  display: none;
   overflow-x: auto;
 }
 
@@ -115,7 +114,7 @@ table tr.headerRow {
 }
 
 /* Media Query for Desktop */
-@media (min-width: 720px) {
+@media (min-width: 700px) {
   .mobileView {
     display: none;
   }

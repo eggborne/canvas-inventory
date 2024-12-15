@@ -1,13 +1,16 @@
-import { InventoryItem, GroupedItem, SortKey, SortDirection } from "./types";
+import { InventoryItem, GroupedItem, SortKey, SortDirection, VisionaryUser, DatabaseUserData } from "./types";
 import { useState, useMemo } from 'react';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import styles from './DataDisplay.module.css';
 
 type DataDisplayProps = {
+  currentInventory: DatabaseUserData;
   data: InventoryItem[];
+  user: VisionaryUser;
+  openModal: () => void;
 };
 
-const DataDisplay = ({ data }: DataDisplayProps) => {
+const DataDisplay = ({ currentInventory, data, openModal }: DataDisplayProps) => {
   const [groupIdentical, setGroupIdentical] = useState(true);
   const [sortKey, setSortKey] = useState<SortKey>('dimensions');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -76,6 +79,8 @@ const DataDisplay = ({ data }: DataDisplayProps) => {
 
   return (
     <div className={styles.container}>
+      {currentInventory.databaseMetadata.displayName} as of 12/09/2024
+      <button type='button' className={'add-button'} onClick={openModal}>Add new</button>
       <div className={styles.controls}>
         <label className={styles.toggleLabel}>
           <input
@@ -102,11 +107,11 @@ const DataDisplay = ({ data }: DataDisplayProps) => {
               <div className={styles.label}>Location:</div>
               <div>{item.location}</div>
               <div className={styles.label}>Origin:</div>
-              <div>{item.origin || 'Unknown'}</div>
+              <div>{item.origin || '-'}</div>
               <div className={styles.label}>Dimensions:</div>
               <div>{item.height} × {item.width} × {item.depth}</div>
               <div className={styles.label}>Packaging:</div>
-              <div>{item.packaging || 'Loose'}</div>
+              <div>{item.packaging || '-'}</div>
               {item.notes && (
                 <>
                   <div className={styles.label}>Notes:</div>
