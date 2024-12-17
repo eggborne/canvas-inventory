@@ -19,9 +19,9 @@ const App = () => {
 
   const [user, setUser] = useState<VisionaryUser | null>(null);
 
-  const fetchInv = async (dbName: string, accessToken: string) => {
+  const fetchInv = async (dbName: string, uid: string, accessToken: string) => {
     const startTime = Date.now();
-    const items = await getInventory(dbName, accessToken);
+    const items = await getInventory(dbName, uid, accessToken);
     setInventoryData(items);
     console.warn(items.length, 'items fetched in', (Date.now() - startTime), 'ms');
   }
@@ -36,18 +36,20 @@ const App = () => {
         uid: firebaseUser.uid,
       };
       const userDBData = await getUser(invUser.uid, invUser.accessToken);
-      setUser({
+      const nextUser = {
         visionaryData: invUser,
         inventoryData: {
           databases: userDBData?.authorizations?.inventory?.databases || [],
         },
-      });
+      };
+      setUser(nextUser);
       return userDBData || null;
     }
 
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser: User | null) => {
       if (firebaseUser) {
         getUserData(firebaseUser);
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user logged in!')
       } else {
         window.location.href = 'https://visionary.tools/';
       }
@@ -55,7 +57,6 @@ const App = () => {
     });
 
     const darkMode = localStorage.getItem('darkMode');
-    console.log('dark?', darkMode)
     if (darkMode !== null) {
       toggleDarkMode(JSON.parse(darkMode));
     } else {
@@ -65,7 +66,6 @@ const App = () => {
     requestAnimationFrame(() => {
       setLoaded(true);
     })
-    console.log('loaded?', loaded);
     return () => unsubscribe();
   }, []);
 
@@ -75,7 +75,7 @@ const App = () => {
 
       if (dbNameList.length > 0) {
         console.log('db names:', dbNameList);
-        fetchInv(dbNameList[0], user.visionaryData.accessToken);
+        fetchInv(dbNameList[0], user.visionaryData.uid, user.visionaryData.accessToken);
       }
     }
   }, [user])
@@ -112,7 +112,7 @@ const App = () => {
       <main style={{ opacity: loaded ? 1 : 0 }}>
         {(user && inventoryData.length > 0) ?
           <>            
-            <DataDisplay currentInventory={user.inventoryData.databases['loren-inventory']} data={inventoryData} user={user} openModal={openModal} />
+            <DataDisplay currentInventory={user.inventoryData.databases['loren_blank_canvases']} data={inventoryData} user={user} openModal={openModal} />
           </>
           :
           <div>loading...</div>
@@ -124,4 +124,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

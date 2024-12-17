@@ -11,7 +11,6 @@ const AddItemModal = ({ isOpen, onClose }: ModalProps) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    console.log('got formData', formData)
     const quantity = parseInt(formData.get('quantity') as string, 10);
     const newItem = {
       width: parseInt(formData.get('width') as string, 10),

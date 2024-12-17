@@ -43,6 +43,7 @@ button.add-button {
   color: #eee;
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
+  width: 12rem;
 }
 
 button.save-button {
