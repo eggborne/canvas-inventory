@@ -83,23 +83,11 @@
         "lines": 36
       }
     },
-    "DataDisplay.module.css": {
-      "size": 1904,
-      "type": "css",
-      "lastModified": "2024-12-14T07:23:50.734Z",
-      "lines": 125
-    },
-    "DataDisplay.tsx": {
-      "size": 7062,
-      "type": "tsx",
-      "lastModified": "2024-12-15T06:16:59.069Z",
-      "lines": 186
-    },
     "fetch.ts": {
-      "size": 2423,
+      "size": 2374,
       "type": "ts",
-      "lastModified": "2024-12-18T02:15:46.428Z",
-      "lines": 84
+      "lastModified": "2024-12-18T05:22:17.605Z",
+      "lines": 83
     },
     "firebase.ts": {
       "size": 1480,
@@ -151,10 +139,10 @@
     "lines": 25
   },
   "visionary-tools-inventory-structure.json": {
-    "size": 3185,
+    "size": 3666,
     "type": "json",
-    "lastModified": "2024-12-18T01:22:43.259Z",
-    "lines": 147
+    "lastModified": "2024-12-18T05:21:46.412Z",
+    "lines": 165
   },
   "vite.config.ts": {
     "size": 183,
