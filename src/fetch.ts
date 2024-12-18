@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { InventoryItem, InventoryResponse, UserDBData } from './types';
+import { InventoryItem, UserDBData } from './types';
 
 const API_BASE_URL = 'https://visionary.tools/api';
 

@@ -1,0 +1,165 @@
+{
+  "eslint.config.js": {
+    "size": 734,
+    "type": "js",
+    "lastModified": "2024-12-09T23:00:30.817Z",
+    "lines": 29
+  },
+  "index.html": {
+    "size": 433,
+    "type": "html",
+    "lastModified": "2024-12-14T07:21:39.006Z",
+    "lines": 15
+  },
+  "package-lock.json": {
+    "size": 154453,
+    "type": "json",
+    "lastModified": "2024-12-18T01:22:27.411Z",
+    "lines": 4328
+  },
+  "package.json": {
+    "size": 809,
+    "type": "json",
+    "lastModified": "2024-12-18T01:22:27.393Z",
+    "lines": 33
+  },
+  "public": {
+    "favicon.svg": {
+      "size": 1529,
+      "type": "svg",
+      "lastModified": "2024-12-14T02:39:36.455Z",
+      "lines": 58
+    }
+  },
+  "README.md": {
+    "size": 1607,
+    "type": "md",
+    "lastModified": "2024-12-09T23:00:30.924Z",
+    "lines": 51
+  },
+  "src": {
+    "AddItemModal.tsx": {
+      "size": 3295,
+      "type": "tsx",
+      "lastModified": "2024-12-17T17:36:41.411Z",
+      "lines": 80
+    },
+    "App.css": {
+      "size": 1152,
+      "type": "css",
+      "lastModified": "2024-12-15T05:34:12.655Z",
+      "lines": 75
+    },
+    "App.tsx": {
+      "size": 5524,
+      "type": "tsx",
+      "lastModified": "2024-12-18T03:40:13.171Z",
+      "lines": 163
+    },
+    "assets": {},
+    "components": {
+      "InventoryDisplay.module.css": {
+        "size": 1946,
+        "type": "css",
+        "lastModified": "2024-12-18T04:49:54.611Z",
+        "lines": 129
+      },
+      "InventoryDisplay.tsx": {
+        "size": 7848,
+        "type": "tsx",
+        "lastModified": "2024-12-18T04:53:34.031Z",
+        "lines": 258
+      },
+      "ThemeToggle.module.css": {
+        "size": 1031,
+        "type": "css",
+        "lastModified": "2024-12-12T05:50:24.112Z",
+        "lines": 68
+      },
+      "ThemeToggle.tsx": {
+        "size": 1058,
+        "type": "tsx",
+        "lastModified": "2024-12-12T05:04:06.841Z",
+        "lines": 36
+      }
+    },
+    "DataDisplay.module.css": {
+      "size": 1904,
+      "type": "css",
+      "lastModified": "2024-12-14T07:23:50.734Z",
+      "lines": 125
+    },
+    "DataDisplay.tsx": {
+      "size": 7062,
+      "type": "tsx",
+      "lastModified": "2024-12-15T06:16:59.069Z",
+      "lines": 186
+    },
+    "fetch.ts": {
+      "size": 2423,
+      "type": "ts",
+      "lastModified": "2024-12-18T02:15:46.428Z",
+      "lines": 84
+    },
+    "firebase.ts": {
+      "size": 1480,
+      "type": "ts",
+      "lastModified": "2024-12-15T03:52:31.223Z",
+      "lines": 51
+    },
+    "index.css": {
+      "size": 2666,
+      "type": "css",
+      "lastModified": "2024-12-17T17:38:58.069Z",
+      "lines": 158
+    },
+    "main.tsx": {
+      "size": 230,
+      "type": "tsx",
+      "lastModified": "2024-12-09T23:00:31.093Z",
+      "lines": 11
+    },
+    "types.ts": {
+      "size": 1536,
+      "type": "ts",
+      "lastModified": "2024-12-18T03:39:34.984Z",
+      "lines": 73
+    },
+    "vite-env.d.ts": {
+      "size": 38,
+      "type": "ts",
+      "lastModified": "2024-12-09T23:00:31.070Z",
+      "lines": 2
+    }
+  },
+  "tsconfig.app.json": {
+    "size": 665,
+    "type": "json",
+    "lastModified": "2024-12-09T23:00:30.885Z",
+    "lines": 27
+  },
+  "tsconfig.json": {
+    "size": 119,
+    "type": "json",
+    "lastModified": "2024-12-09T23:00:30.891Z",
+    "lines": 8
+  },
+  "tsconfig.node.json": {
+    "size": 593,
+    "type": "json",
+    "lastModified": "2024-12-09T23:00:30.906Z",
+    "lines": 25
+  },
+  "visionary-tools-inventory-structure.json": {
+    "size": 3185,
+    "type": "json",
+    "lastModified": "2024-12-18T01:22:43.259Z",
+    "lines": 147
+  },
+  "vite.config.ts": {
+    "size": 183,
+    "type": "ts",
+    "lastModified": "2024-12-14T04:11:31.309Z",
+    "lines": 8
+  }
+}

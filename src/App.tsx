@@ -1,18 +1,33 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { FirebaseUserData, InventoryItem, UserDBData, VisionaryUser } from './types';
+import { Column, FirebaseUserData, InventoryItem, UserDBData, VisionaryUser } from './types';
 import { getInventory, getUser } from './fetch'
-import DataDisplay from './DataDisplay'
 import AddItemModal from './AddItemModal';
 import ThemeToggle from './components/ThemeToggle';
 import { auth } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
+import InventoryDisplay from './components/InventoryDisplay';
+
+const CURRENT_INVENTORY = 'loren_paintings';
+// const CURRENT_INVENTORY = 'loren_blank_canvases';
+
+const generateColumnsFromData = (data: any[]): Column[] => {
+  if (data.length === 0) return [];
+
+  return Object.entries(data[0]).map(([key, value]) => ({
+    key,
+    label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
+    type: typeof value === 'number' ? 'number' :
+      key === 'created_at' || key === 'updated_at' ? 'date' : 'text'
+  }));
+};
 
 const App = () => {
   const [loaded, setLoaded] = useState(false);
   const [inventoryData, setInventoryData] = useState<InventoryItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [columns, setColumns] = useState<Column[]>([]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -72,13 +87,27 @@ const App = () => {
   useEffect(() => {
     if (user) {
       const dbNameList = Object.keys(user.inventoryData.databases);
-
       if (dbNameList.length > 0) {
         console.log('db names:', dbNameList);
-        fetchInv(dbNameList[0], user.visionaryData.uid, user.visionaryData.accessToken);
+        fetchInv(CURRENT_INVENTORY, user.visionaryData.uid, user.visionaryData.accessToken);
       }
     }
-  }, [user])
+  }, [user]);
+
+  useEffect(() => {
+    if (inventoryData.length > 0) {
+      // First check if columns are defined in database metadata
+      const dbColumns = user?.inventoryData.databases[CURRENT_INVENTORY]
+        ?.databaseMetadata.columns;
+
+      if (dbColumns) {
+        setColumns(dbColumns);
+      } else {
+        // Generate columns from data if not defined in metadata
+        setColumns(generateColumnsFromData(inventoryData));
+      }
+    }
+  }, [inventoryData, user]);
 
   const toggleDarkMode = (newDarkState: boolean) => {
     setIsDarkMode(newDarkState);
@@ -112,7 +141,13 @@ const App = () => {
       <main style={{ opacity: loaded ? 1 : 0 }}>
         {(user && inventoryData.length > 0) ?
           <>            
-            <DataDisplay currentInventory={user.inventoryData.databases['loren_blank_canvases']} data={inventoryData} user={user} openModal={openModal} />
+            <InventoryDisplay
+              currentInventory={user.inventoryData.databases[CURRENT_INVENTORY]}
+              data={inventoryData}
+              columns={columns}
+              user={user}
+              openModal={openModal}
+            />
           </>
           :
           <div>loading...</div>
