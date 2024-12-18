@@ -20,6 +20,7 @@ const defaultFormatters = {
 const InventoryDisplay = ({ currentInventory, data, columns, openModal }: InventoryDisplayProps) => {
   const [groupIdentical, setGroupIdentical] = useState(true);
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'asc' });
+  console.log('showing', currentInventory)
 
   const visibleColumns = useMemo(() => {
     return groupIdentical ? columns.filter(column => column.key !== 'id') : columns;
@@ -177,7 +178,7 @@ const InventoryDisplay = ({ currentInventory, data, columns, openModal }: Invent
 
   return (
     <div className={styles.container}>
-      {currentInventory.databaseMetadata.displayName}
+      {/* {currentInventory.databaseMetadata.displayName} */}
       <button type='button' className='add-button' onClick={openModal}>
         Add new
       </button>

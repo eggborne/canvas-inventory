@@ -1,0 +1,14 @@
+.databaseSelection {
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.databaseSelection h2 {
+  margin-bottom: 10px;
+}
+
+.databaseSelection select {
+  padding: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}

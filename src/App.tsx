@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { Column, FirebaseUserData, InventoryItem, UserDBData, VisionaryUser } from './types';
+import { Column, DatabaseUserData, FirebaseUserData, InventoryItem, UserDBData, VisionaryUser } from './types';
 import { getInventory, getUser } from './fetch'
 import AddItemModal from './AddItemModal';
 import ThemeToggle from './components/ThemeToggle';
 import { auth } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import InventoryDisplay from './components/InventoryDisplay';
+import DatabaseSelection from './components/DatabaseSelection';
 
 const CURRENT_INVENTORY = 'loren_paintings';
 // const CURRENT_INVENTORY = 'loren_blank_canvases';
@@ -27,6 +28,7 @@ const App = () => {
   const [inventoryData, setInventoryData] = useState<InventoryItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [selectedDatabase, setSelectedDatabase] = useState<DatabaseUserData | null>(null);
   const [columns, setColumns] = useState<Column[]>([]);
 
   const openModal = () => setIsModalOpen(true);
@@ -40,6 +42,15 @@ const App = () => {
     setInventoryData(items);
     console.warn(items.length, 'items fetched in', (Date.now() - startTime), 'ms');
   }
+
+  const handleSelectionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log('selected inv', event.target.value);
+    if (user) {
+      setSelectedDatabase(user?.inventoryData.databases[event.target.value]);
+    }
+    // fetchInv(event.target.value, user?.visionaryData.uid || '', user?.visionaryData.accessToken || '');
+    // setSelectedDatabase(user?.inventoryData.databases[event.target.value]);
+  };
 
   useEffect(() => {
     const getUserData = async (firebaseUser: User): Promise<UserDBData | null> => {
@@ -89,10 +100,13 @@ const App = () => {
       const dbNameList = Object.keys(user.inventoryData.databases);
       if (dbNameList.length > 0) {
         console.log('db names:', dbNameList);
-        fetchInv(CURRENT_INVENTORY, user.visionaryData.uid, user.visionaryData.accessToken);
+        fetchInv(selectedDatabase?.databaseMetadata.databaseName || '', user.visionaryData.uid, user.visionaryData.accessToken);
+      }
+      if (!selectedDatabase) {
+        setSelectedDatabase(user?.inventoryData.databases['loren_blank_canvases']);
       }
     }
-  }, [user]);
+  }, [user, selectedDatabase]);
 
   useEffect(() => {
     if (inventoryData.length > 0) {
@@ -139,10 +153,15 @@ const App = () => {
         }
       </header>
       <main style={{ opacity: loaded ? 1 : 0 }}>
-        {(user && inventoryData.length > 0) ?
+        {(user && selectedDatabase && inventoryData.length > 0) ?
           <>            
+            <DatabaseSelection
+              databases={Object.values(user?.inventoryData?.databases || {}) || []}
+              selectedDatabase={selectedDatabase}
+              onDatabaseSelect={handleSelectionChange}
+            />
             <InventoryDisplay
-              currentInventory={user.inventoryData.databases[CURRENT_INVENTORY]}
+              currentInventory={selectedDatabase}
               data={inventoryData}
               columns={columns}
               user={user}

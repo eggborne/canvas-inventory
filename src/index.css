@@ -44,6 +44,7 @@ button.add-button {
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   width: 12rem;
+  display: none;
 }
 
 button.save-button {
