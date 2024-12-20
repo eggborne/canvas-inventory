@@ -45,6 +45,7 @@ const getInventory = async (inventoryName: string, uid: string, accessToken: str
 
     if (response.status === 200) {
       const inventoryData = await response.json();
+      console.log('got inv', inventoryData)
       return inventoryData;
     } else {
       throw new Error('Failed to fetch inventory data');

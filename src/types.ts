@@ -71,3 +71,25 @@ export type SortConfig = {
   key: string;
   direction: 'asc' | 'desc';
 };
+
+export type LabelOption = {
+  shortName?: string,
+  longName?: string,
+  specialType?: string;
+};
+
+export interface InventoryGridProps {
+  data: DataItem[];
+  columns: Column[];
+  groupIdentical: boolean;
+  currentInventory: DatabaseUserData;
+}
+
+export interface SortOption {
+  value: string;
+  label: string;
+}
+
+export interface GroupedDataItem extends DataItem {
+  quantity?: number;
+}

@@ -1,7 +1,7 @@
 import { Fragment, useState, useMemo } from 'react';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import styles from './InventoryDisplay.module.css';
-import { Column, DatabaseUserData, DataItem, GroupedDataItem, LabelOption, SortConfig, SortOption, VisionaryUser } from '../types';
+import { Column, DatabaseUserData, DataItem, LabelOption, SortConfig, VisionaryUser } from '../types';
 import InventoryGrid from './InventoryGrid';
 
 interface InventoryDisplayProps {
@@ -20,8 +20,12 @@ const defaultFormatters = {
 
 const InventoryDisplay = ({ currentInventory, data, columns, openModal }: InventoryDisplayProps) => {
   const [groupIdentical, setGroupIdentical] = useState(true);
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'width', direction: 'desc' });
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'asc' });
   console.log('showing', currentInventory)
+
+  const visibleColumns = useMemo(() => {
+    return groupIdentical ? columns.filter(column => column.key !== 'id') : columns;
+  }, [columns, groupIdentical]);
 
   const hasIdenticalItems = useMemo(() => {
     const itemSet = new Set();
@@ -197,52 +201,6 @@ const InventoryDisplay = ({ currentInventory, data, columns, openModal }: Invent
     return cellContent;
   };
 
-
-
-  const sortOptions: SortOption[] = useMemo(() =>
-    columns.map(col => ({
-      value: col.key,
-      label: col.label
-    }))
-    , [columns]);
-
-  const sortedData = useMemo(() => {
-    let processed: GroupedDataItem[] = [...data];
-    if (sortConfig.key) {
-      processed.sort((a, b) => {
-        const valueA = a[sortConfig.key];
-        const valueB = b[sortConfig.key];
-
-        if (valueA == null && valueB == null) return 0;
-        if (valueA == null) return 1;
-        if (valueB == null) return -1;
-
-        const comparison = typeof valueA === 'number' && typeof valueB === 'number'
-          ? valueA - valueB
-          : String(valueA).localeCompare(String(valueB));
-
-        return sortConfig.direction === 'asc' ? comparison : -comparison;
-      });
-    }
-
-    return processed;
-  }, [data, groupIdentical, sortConfig]);
-
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSortConfig(prev => ({ ...prev, key: event.target.value }));
-  };
-
-  const toggleSortDirection = (): void => {
-    setSortConfig(prev => ({
-      ...prev,
-      direction: prev.direction === 'asc' ? 'desc' : 'asc'
-    }));
-  };
-
-
-
-
-
   return (
     <div className={styles.container}>
       {/* {currentInventory.databaseMetadata.displayName} */}
@@ -264,80 +222,112 @@ const InventoryDisplay = ({ currentInventory, data, columns, openModal }: Invent
         )}
       </div>
 
-      <div className={styles.inventoryGrid}>
-        <div className={styles.sortControls}>
-          <div className={styles.sortSelect}>
-            <span className={styles.sortLabel}>Sort by:</span>
-            <select
-              className={styles.select}
-              value={sortConfig.key}
-              onChange={handleSortChange}
-            >
-              <option value="">None</option>
-              {sortOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* Mobile view */}
+      <div className={styles.mobileView}>
+        {processedData.map((item, index) => {
+          const idColumn = visibleColumns.find(col => col.key === 'id');
+          const titleColumn = visibleColumns.find(col => col.key === 'title');
+          const dimensionColumns = visibleColumns.filter(col => ['width', 'height', 'depth'].includes(col.key));
+          const otherColumns = visibleColumns.filter(col =>
+            !['width', 'height', 'depth', 'id', 'title'].includes(col.key)
+          );
 
-          {sortConfig.key && (
-            <button
-              className={styles.directionButton}
-              onClick={toggleSortDirection}
-              type="button"
-              aria-label={`Sort ${sortConfig.direction === 'asc' ? 'descending' : 'ascending'}`}
-            >
-              <ArrowUpDown />
-            </button>
-          )}
-        </div>
+          return (
+            <div key={item.id || index} className={styles.card}>
+              <div className={styles.mainInfo}>
+                {/* Title Section */}
+                {titleColumn && (
+                  <div className={styles.title}>
+                    {renderCell(item, titleColumn)}
+                  </div>
+                )}
 
-        <div className={styles.inventoryGrid}>
-          <div>
-
-          </div>
-          <div className={styles.cardContainer}>
-            {processedData.map((item, index) => (
-              <div key={item.id || index} className={styles.card}>
-                {item.id && <div className={styles.id}>#{item.id}</div>}
-                {groupIdentical && <div className={styles.quantity}>Quantity: {item.quantity || 1}</div>}
-
-                <div className={styles.title}>{item.title || '[no title]'}</div>
-
-                {/* Dimensions section */}
                 <div className={styles.dimensions}>
-                  {['width', 'height', 'depth'].map(dim =>
-                    item[dim] != null && (
-                      <div key={dim} className={styles.dimension}>
-                        <span className={styles.dimensionLabel}>
-                          {dim[0].toUpperCase()}
-                        </span>
-                        <span className={styles.dimensionValue}>
-                          {item[dim]}
-                        </span>
-                      </div>
-                    )
-                  )}
+                  {dimensionColumns.map((column, c) => (
+                    <div key={column.key} className={styles.dimension}>
+                      {renderCell(item, column) &&
+                        <>
+                          <span className={styles.dimensionLabel}>
+                            {(labelOptions[column.key] && labelOptions[column.key].shortName) || column.label[0]}
+                          </span>
+                          <span className={styles.dimensionValue}>
+                            {renderCell(item, column)}
+                          </span>
+                        </>
+                      }
+                    </div>
+                  ))}
                 </div>
 
-                {/* Other metadata */}
                 <div className={styles.metadata}>
-                  {columns
-                    .filter(col => !['id', 'title', 'width', 'height', 'depth'].includes(col.key))
-                    .map(col => item[col.key] != null && (
-                      <Fragment key={col.key}>
-                        <div className={styles.label}>{col.label}:</div>
-                        <div>{item[col.key]}</div>
-                      </Fragment>
-                    ))}
+                  {otherColumns.map(column => (
+                    <Fragment key={column.key}>
+                      <div className={styles.label}>
+                        {(labelOptions[column.key] && labelOptions[column.key].shortName) || column.label}:
+                      </div>
+                      <div>{renderCell(item, column)}</div>
+                    </Fragment>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+
+              <div className={styles.rightCol}>
+                {idColumn && (
+                  <div className={styles.id}>
+                    {renderCell(item, idColumn)}
+                  </div>
+                )}
+                {groupIdentical && (
+                  <div className={styles.quantity}>
+                    {item.quantity || 1}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
+
+      {/* <div className={styles.desktopView}>
+        <table className={styles.table}>
+          <thead>
+            <tr className={styles.headerRow}>
+              {groupIdentical && (
+                <th onClick={() => handleSort('quantity')}>
+                  <div className={styles.headerContent}>
+                    Qty <SortIcon columnKey="quantity" />
+                  </div>
+                </th>
+              )}
+              {visibleColumns.map(column => (
+                <th key={column.key} onClick={() => handleSort(column.key)}>
+                  <div className={styles.headerContent}>
+                    {(labelOptions[column.key] && labelOptions[column.key].shortName) || column.label} <SortIcon columnKey={column.key} />
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {processedData.map((item, index) => (
+              <tr key={item.id || index}>
+                {groupIdentical && <td>{item.quantity || 1}</td>}
+                {visibleColumns.map(column => (
+                  <td key={column.key}>{renderCell(item, column)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div> */}
+
+      {/* Desktop view */}
+      <InventoryGrid
+        data={processedData}
+        columns={visibleColumns}
+        groupIdentical={groupIdentical}
+        currentInventory={currentInventory}
+      />
 
     </div>
   );
