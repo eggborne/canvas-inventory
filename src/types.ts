@@ -38,11 +38,13 @@ export interface UserDBData {
   displayName: string;
   email: string;
   photoURL: string;
+  preferences: Record<string, any>;
 }
 
 export interface VisionaryUser {
   visionaryData: FirebaseUserData;
   inventoryData: UserInventoryData;
+  preferences?: Record<string, any>;
 }
 
 export interface InventoryItem {

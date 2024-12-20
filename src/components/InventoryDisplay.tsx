@@ -1,7 +1,8 @@
-import { Fragment, useState, useMemo } from 'react';
+import { Fragment, useState, useMemo, useEffect } from 'react';
 import { ArrowUpDown, ArrowUp, ArrowDown, LayoutGrid, Check, X, ListIcon } from 'lucide-react';
 import styles from './InventoryDisplay.module.css';
 import { Column, DatabaseUserData, DataItem, LabelOption, SortConfig, SortOption, VisionaryUser } from '../types';
+import { updateUserPreferences } from '../fetch';
 
 const defaultFormatters = {
   text: (value: any) => value?.toString() || value,
@@ -17,10 +18,41 @@ interface InventoryDisplayProps {
   openModal: () => void;
 }
 
-const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) => {
+const InventoryDisplay = ({ data, columns, user, openModal }: InventoryDisplayProps) => {
   const [groupIdentical, setGroupIdentical] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('table');
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'width', direction: 'desc' });
+
+  useEffect(() => {
+    if (!user.preferences) return;
+    if (user.preferences?.sortConfig !== sortConfig) {
+      setSortConfig(user.preferences.sortConfig);
+    }    
+    if (user.preferences?.viewMode !== viewMode) {
+      setViewMode(user.preferences.viewMode);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user.preferences?.viewMode !== viewMode) {
+      updateUserPreferences(user.visionaryData.uid, user.visionaryData.accessToken, 'preferences', { ...user.preferences, viewMode });
+    }
+  }, [viewMode])
+
+  // useEffect(() => {
+  //   // if (user.preferences?.groupIdentical !== groupIdentical || user.preferences?.viewMode !== viewMode || user.preferences?.sortConfig !== sortConfig) {
+  //   if (user.preferences?.viewMode && user.preferences?.viewMode !== viewMode) {
+  //     console.log('updating differing iewMode!', user.preferences);
+  //     updateUserPreferences(user.visionaryData.uid, user.visionaryData.accessToken, 'preferences', { ...user.preferences });
+  //   }
+
+  // }, [viewMode])
+
+  useEffect(() => {
+    if (sortConfig) {
+      updateUserPreferences(user.visionaryData.uid, user.visionaryData.accessToken, 'preferences', { ...user.preferences, sortConfig });
+    }
+  }, [sortConfig]);
 
   const hasIdenticalItems = useMemo(() => {
     const itemSet = new Set();
@@ -52,6 +84,7 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
   };
 
   const processedData = useMemo(() => {
+    if (!sortConfig) { return; }
     let processed = [...data];
     if (groupIdentical) {
       const groups = data.reduce<Record<string, DataItem & { quantity: number }>>((acc, item) => {
@@ -74,14 +107,14 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
   }, [data, groupIdentical, sortConfig]);
 
   const handleSort = (key: string) => {
-    setSortConfig(current => ({
+    setSortConfig(current => (current && {
       key,
       direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
     }));
   };
 
   const SortIcon = ({ columnKey }: { columnKey: string }) => {
-    if (sortConfig.key !== columnKey) {
+    if (sortConfig?.key !== columnKey) {
       return <ArrowUpDown className={styles.sortIcon} />;
     }
     return sortConfig.direction === 'asc'
@@ -143,7 +176,7 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
     signed: { replace: { 0: 'No', 1: 'Yes' } },
     wrapped: { replace: { 0: 'No', 1: 'Yes' } },
     urgent: { replace: { 0: 'No', 1: 'Yes' } },
-    finished: { replace: { 0: 'No', 1: <Check color='lightgreen'/> } }
+    finished: { replace: { 0: 'No', 1: <Check color='lightgreen' /> } }
   };
 
   const processItem = (item: DataItem) => {
@@ -176,18 +209,17 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
     columns.map(col => ({
       value: col.key,
       label: col.label
-    }))
-    , [columns]);
+    })), [columns]);
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSortConfig(prev => ({ ...prev, key: event.target.value }));
+    setSortConfig(prev => ({ ...prev, key: event.target.value, direction: prev?.direction || 'asc' }));
   };
 
   const toggleSortDirection = (): void => {
-    setSortConfig(prev => ({
+    setSortConfig(prev => prev ? ({
       ...prev,
       direction: prev.direction === 'asc' ? 'desc' : 'asc'
-    }));
+    }) : prev);
   };
 
   return (
@@ -197,7 +229,7 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
       </button>
 
       <div className={styles.controls}>
-        <div className={styles.viewControls}>          
+        <div className={styles.viewControls}>
           <button
             onClick={() => setViewMode('table')}
             className={`${styles.viewButton} ${viewMode === 'table' ? styles.active : ''}`}
@@ -225,7 +257,7 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
             Group identical
           </label>
         ) : <div></div>}
-        <div className={styles.sortControls}>
+        {sortConfig && <div className={styles.sortControls}>
           <div className={styles.sortSelect}>
             <span className={styles.sortLabel}>Sort by:</span>
             <select
@@ -252,14 +284,14 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
               <ArrowUpDown />
             </button>
           )}
-        </div>
+        </div>}
       </div>
 
       <div className={styles.inventoryContent}>
 
         {viewMode === 'grid' ? (
           <div className={styles.cardContainer}>
-            {processedData.map((item, index) => (
+            {processedData && processedData.map((item, index) => (
               <div key={item.id || index} className={styles.card}>
                 <div className={styles.mainInfo}>
                   {item.id && <div className={styles.id}> {(!groupIdentical || item.quantity === 1) && item.id}</div>}
@@ -316,7 +348,7 @@ const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) =
                 </tr>
               </thead>
               <tbody>
-                {processedData.map((item) => (
+                  {processedData && processedData.map((item) => (
                   <tr key={item.id}>
                     {columns.map((column) => (
                       <td key={`${item.id}-${column.key}`}>

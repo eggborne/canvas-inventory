@@ -5,7 +5,6 @@
   line-height: 1.25;
   font-weight: 400;
 
-  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -20,7 +19,7 @@
 
 * {
   box-sizing: border-box;
-  overscroll-behavior: none;
+  /* overscroll-behavior: none; */
 }
 
 a {

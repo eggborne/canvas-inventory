@@ -20,10 +20,33 @@ async function getUser(uid: string, accessToken: string): Promise<UserDBData | u
     }
 
     const userData = await response.json();
+    console.log('User data:', userData);
     return userData;
 
   } catch (error) {
     console.error('Detailed error:', error);
+    throw error;
+  }
+}
+
+async function updateUserPreferences(uid: string, accessToken: string, prop: string, newValue: Record<string, any> | string | number): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/update`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ uid, accessToken, prop, newValue }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+
+  } catch (error) {
+    console.error('Error updating user preferences:', error);
     throw error;
   }
 }
@@ -80,4 +103,4 @@ const addNewItem = async (newItem: InventoryItem): Promise<void> => {
 };
 
 
-export { addNewItem, getInventory, getUser };
+export { addNewItem, getInventory, getUser, updateUserPreferences };
