@@ -129,10 +129,12 @@ const App = () => {
       document.documentElement.style.setProperty('--background-color', '#242424');
       document.documentElement.style.setProperty('--text-color', '#ffffffde');
       document.documentElement.style.setProperty('--accent-color', '#444');
+      document.documentElement.style.setProperty('--odd-line-color', '#ffffff0d');
     } else {
-      document.documentElement.style.setProperty('--background-color', '#efefef');
+      document.documentElement.style.setProperty('--background-color', '#eaeaea');
       document.documentElement.style.setProperty('--text-color', '#18181b');
       document.documentElement.style.setProperty('--accent-color', '#ccc');
+      document.documentElement.style.setProperty('--odd-line-color', '#0000000d');
     }
     localStorage.setItem('darkMode', JSON.stringify(newDarkState));
   }
