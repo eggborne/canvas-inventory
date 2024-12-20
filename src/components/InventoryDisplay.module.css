@@ -10,7 +10,7 @@
 /* Controls Section */
 .controls {
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   /* justify-content: space-between; */
   gap: 1.5rem;

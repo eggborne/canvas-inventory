@@ -1,7 +1,7 @@
 import { Fragment, useState, useMemo } from 'react';
-import { ArrowUpDown, ArrowUp, ArrowDown, LayoutGrid, Check, X, Table as TableIcon, ListIcon, CheckIcon } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, LayoutGrid, Check, X, ListIcon } from 'lucide-react';
 import styles from './InventoryDisplay.module.css';
-import { Column, DatabaseUserData, DataItem, GroupedDataItem, LabelOption, SortConfig, SortOption, VisionaryUser } from '../types';
+import { Column, DatabaseUserData, DataItem, LabelOption, SortConfig, SortOption, VisionaryUser } from '../types';
 
 const defaultFormatters = {
   text: (value: any) => value?.toString() || value,
@@ -17,7 +17,7 @@ interface InventoryDisplayProps {
   openModal: () => void;
 }
 
-const InventoryDisplay = ({ currentInventory, data, columns, openModal }: InventoryDisplayProps) => {
+const InventoryDisplay = ({ data, columns, openModal }: InventoryDisplayProps) => {
   const [groupIdentical, setGroupIdentical] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('table');
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'width', direction: 'desc' });
@@ -214,7 +214,7 @@ const InventoryDisplay = ({ currentInventory, data, columns, openModal }: Invent
           </button>
         </div>
 
-        {hasIdenticalItems && (
+        {hasIdenticalItems ? (
           <label className={styles.toggleLabel}>
             <input
               type="checkbox"
@@ -224,7 +224,7 @@ const InventoryDisplay = ({ currentInventory, data, columns, openModal }: Invent
             />
             Group identical
           </label>
-        )}
+        ) : <div></div>}
         <div className={styles.sortControls}>
           <div className={styles.sortSelect}>
             <span className={styles.sortLabel}>Sort by:</span>

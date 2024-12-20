@@ -44,12 +44,9 @@ const App = () => {
   }
 
   const handleSelectionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('selected inv', event.target.value);
     if (user) {
       setSelectedDatabase(user?.inventoryData.databases[event.target.value]);
     }
-    // fetchInv(event.target.value, user?.visionaryData.uid || '', user?.visionaryData.accessToken || '');
-    // setSelectedDatabase(user?.inventoryData.databases[event.target.value]);
   };
 
   useEffect(() => {
@@ -98,12 +95,12 @@ const App = () => {
   useEffect(() => {
     if (user) {
       const dbNameList = Object.keys(user.inventoryData.databases);
-      if (dbNameList.length > 0) {
-        console.log('db names:', dbNameList);
-        fetchInv(selectedDatabase?.databaseMetadata.databaseName || '', user.visionaryData.uid, user.visionaryData.accessToken);
+      if (dbNameList.length > 0 && selectedDatabase) {        // const nextDatabase = dbNameList.find((dbName) => dbName === CURRENT_INVENTORY);
+        const nextDatabase = selectedDatabase.databaseMetadata.databaseName
+        nextDatabase && fetchInv(nextDatabase || '', user.visionaryData.uid, user.visionaryData.accessToken);
       }
       if (!selectedDatabase) {
-        setSelectedDatabase(user?.inventoryData.databases['loren_blank_canvases']);
+        setSelectedDatabase(user?.inventoryData.databases['loren_paintings']);
       }
     }
   }, [user, selectedDatabase]);
@@ -111,9 +108,7 @@ const App = () => {
   useEffect(() => {
     if (inventoryData.length > 0) {
       // First check if columns are defined in database metadata
-      const dbColumns = user?.inventoryData.databases[CURRENT_INVENTORY]
-        ?.databaseMetadata.columns;
-
+      const dbColumns = user?.inventoryData.databases[CURRENT_INVENTORY]?.databaseMetadata.columns;
       if (dbColumns) {
         setColumns(dbColumns);
       } else {
