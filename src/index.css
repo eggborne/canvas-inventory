@@ -15,6 +15,8 @@
   --text-color: #ffffffde
   --odd-line-color: #ffffff0d;
   */
+
+  --header-height: 3.5rem;
 }
 
 * {

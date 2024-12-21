@@ -1,28 +1,31 @@
-import styles from "./DatabaseSelection.module.css";
 import { DatabaseUserData } from "../types";
-import { ChangeEvent } from "react";
+import styles from "./DatabaseSelection.module.css";
+import { Check } from "lucide-react";
 
 interface DatabaseSelectionProps {
   databases: DatabaseUserData[];
   selectedDatabase: DatabaseUserData | null;
-  onDatabaseSelect: (event: ChangeEvent<HTMLSelectElement>) => void;
+  onDatabaseSelect: (databaseName: string) => void;
 }
 
-const DatabaseSelection = ({ databases, selectedDatabase, onDatabaseSelect }: DatabaseSelectionProps) => {
-
+const DatabaseSelection = ({
+  databases,
+  selectedDatabase,
+  onDatabaseSelect
+}: DatabaseSelectionProps) => {
+  
+  const handleDatabaseSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onDatabaseSelect(e.target.value);
+  }
   return (
     <div className={styles.databaseSelection}>
-      Collection:&nbsp;&nbsp;
-      <select value={selectedDatabase ? selectedDatabase.databaseMetadata?.databaseName : ''} onChange={onDatabaseSelect}>
-        <option value="" disabled>
-          Choose a database
-        </option>
+      <select value={selectedDatabase ? selectedDatabase.databaseMetadata?.databaseName : ''} onChange={(e) => handleDatabaseSelect(e)}>
         {databases.map((db) => (
           <option key={db.databaseMetadata.databaseName} value={db.databaseMetadata.databaseName}>
             {db.databaseMetadata.displayName}
           </option>
         ))}
-      </select>      
+      </select>   
     </div>
   );
 };

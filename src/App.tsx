@@ -24,9 +24,9 @@ const App = () => {
   const [loaded, setLoaded] = useState(false);
   const [inventoryData, setInventoryData] = useState<InventoryItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [columns, setColumns] = useState<Column[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedDatabase, setSelectedDatabase] = useState<DatabaseUserData | null>(null);
-  const [columns, setColumns] = useState<Column[]>([]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -40,11 +40,15 @@ const App = () => {
     console.warn(items.length, 'items fetched in', (Date.now() - startTime), 'ms');
   }
 
-  const handleSelectionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectionChange = (databaseName: string) => {
     if (user) {
-      const nextSelected = user?.inventoryData.databases[event.target.value];
-      setSelectedDatabase(nextSelected);
-      updateUserPreferences(user.visionaryData.uid, user.visionaryData.accessToken, 'preferences', { ...user.preferences, lastDatabase: event.target.value });
+      const nextSelected = Object.values(user?.inventoryData.databases).find(
+        db => db.databaseMetadata.databaseName === databaseName
+      );
+      if (nextSelected) {
+        setSelectedDatabase(nextSelected);
+        updateUserPreferences(user.visionaryData.uid, user.visionaryData.accessToken, 'preferences', { ...user.preferences, lastDatabase: databaseName });
+      }
     }
   };
 
@@ -64,7 +68,7 @@ const App = () => {
         } else {
           toggleDarkMode(isDarkMode);
         }
-       
+
         const nextUser: VisionaryUser = {
           visionaryData: invUser,
           inventoryData: {
@@ -75,7 +79,7 @@ const App = () => {
           console.log('last database:', userDBData.preferences.lastDatabase);
           setSelectedDatabase(nextUser?.inventoryData.databases[userDBData.preferences.lastDatabase]);
         } else {
-          setSelectedDatabase(nextUser?.inventoryData.databases['loren_paintings']);
+          setSelectedDatabase(Object.values(nextUser?.inventoryData.databases)[0]);
         }
         nextUser.preferences = userDBData.preferences;
         console.log('User data:', nextUser);
@@ -132,7 +136,7 @@ const App = () => {
       document.documentElement.style.setProperty('--accent-color', '#444');
       document.documentElement.style.setProperty('--odd-line-color', '#ffffff0d');
     } else {
-      document.documentElement.style.setProperty('--background-color', '#eaeaea');
+      document.documentElement.style.setProperty('--background-color', '#dedede');
       document.documentElement.style.setProperty('--text-color', '#18181b');
       document.documentElement.style.setProperty('--accent-color', '#ccc');
       document.documentElement.style.setProperty('--odd-line-color', '#0000000d');
@@ -148,12 +152,28 @@ const App = () => {
       <header>
         {loaded &&
           <>
-            {user &&
-              <div className='user-info'>
-                <img src={user.visionaryData.photoUrl || ''} alt={user.visionaryData.displayName || ''} />
-                <div>{user.visionaryData.displayName}</div>
+            {/* <div className='user-info'> */}
+              {user ?
+                <>
+                  <div className={'user-info'}>
+                    <img src={user.visionaryData.photoUrl || ''} alt={user.visionaryData.displayName || ''} />
+                    <div>{user.visionaryData.displayName}</div>
+                  </div>
+                  <DatabaseSelection
+                    databases={Object.values(user?.inventoryData?.databases || {}) || []}
+                    selectedDatabase={selectedDatabase}
+                    onDatabaseSelect={handleSelectionChange}
+                  />
+            </>
+            :
+            <>
+              <div className={'user-info'}>
+                {/* <img src={''} alt={''} /> */}
+                <div>{'loading user...'}</div>
               </div>
-            }
+            </>
+              }
+            {/* </div> */}
             <ThemeToggle isDarkMode={isDarkMode} onToggle={() => toggleDarkMode(!isDarkMode)} />
           </>
         }
@@ -161,11 +181,6 @@ const App = () => {
       <main style={{ opacity: loaded ? 1 : 0 }}>
         {(user && selectedDatabase && inventoryData.length > 0) ?
           <>
-            <DatabaseSelection
-              databases={Object.values(user?.inventoryData?.databases || {}) || []}
-              selectedDatabase={selectedDatabase}
-              onDatabaseSelect={handleSelectionChange}
-            />
             <InventoryDisplay
               currentInventory={selectedDatabase}
               data={inventoryData}

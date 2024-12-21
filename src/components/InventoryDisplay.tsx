@@ -27,7 +27,7 @@ const InventoryDisplay = ({ data, columns, user, openModal }: InventoryDisplayPr
     if (!user.preferences) return;
     if (user.preferences?.sortConfig !== sortConfig) {
       setSortConfig(user.preferences.sortConfig);
-    }    
+    }
     if (user.preferences?.viewMode !== viewMode) {
       setViewMode(user.preferences.viewMode);
     }
@@ -230,20 +230,26 @@ const InventoryDisplay = ({ data, columns, user, openModal }: InventoryDisplayPr
 
       <div className={styles.controls}>
         <div className={styles.viewControls}>
-          <button
-            onClick={() => setViewMode('table')}
-            className={`${styles.viewButton} ${viewMode === 'table' ? styles.active : ''}`}
-            aria-label="Table view"
-          >
-            <ListIcon size={20} />
-          </button>
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`${styles.viewButton} ${viewMode === 'grid' ? styles.active : ''}`}
-            aria-label="Grid view"
-          >
-            <LayoutGrid size={20} />
-          </button>
+          <label className={`${viewMode === 'table' ? styles.active : ''}`}>
+            <button
+              onClick={() => setViewMode('table')}
+              className={styles.viewButton}
+              aria-label="Table view"
+            >
+              <ListIcon size={20} />
+            </button>
+            <span>Table view</span>
+          </label>
+          <label className={`${viewMode === 'grid' ? styles.active : ''}`}>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={styles.viewButton}
+              aria-label="Grid view"
+            >
+              <LayoutGrid size={20} />
+            </button>
+            <span>Grid view</span>
+          </label>
         </div>
 
         {hasIdenticalItems ? (
@@ -281,87 +287,85 @@ const InventoryDisplay = ({ data, columns, user, openModal }: InventoryDisplayPr
               type="button"
               aria-label={`Sort ${sortConfig.direction === 'asc' ? 'descending' : 'ascending'}`}
             >
-              <ArrowUpDown />
+              {sortConfig.direction === 'asc' ? <ArrowUp /> : <ArrowDown />}
             </button>
           )}
         </div>}
       </div>
 
-      <div className={styles.inventoryContent}>
 
-        {viewMode === 'grid' ? (
-          <div className={styles.cardContainer}>
-            {processedData && processedData.map((item, index) => (
-              <div key={item.id || index} className={styles.card}>
-                <div className={styles.mainInfo}>
-                  {item.id && <div className={styles.id}> {(!groupIdentical || item.quantity === 1) && item.id}</div>}
-                  <div className={styles.title}>{item.title === '' ? '[no title]' : item.title}</div>
+      {viewMode === 'grid' ? (
+        <div className={styles.cardContainer}>
+          {processedData && processedData.map((item, index) => (
+            <div key={item.id || index} className={styles.card}>
+              <div className={styles.mainInfo}>
+                {item.id && <div className={styles.id}> {(!groupIdentical || item.quantity === 1) && item.id}</div>}
+                <div className={styles.title}>{item.title === '' ? '[no title]' : item.title}</div>
 
-                  <div className={styles.dimensions}>
-                    {['width', 'height', 'depth'].map(dim =>
-                      item[dim] != null && (
-                        <div key={dim} className={styles.dimension}>
-                          <span className={styles.dimensionLabel}>
-                            {dim[0].toUpperCase()}
-                          </span>
-                          <span className={styles.dimensionValue}>
-                            {item[dim]}
-                          </span>
-                        </div>
-                      )
-                    )}
-                  </div>
-
-                  <div className={styles.metadata}>
-                    {columns
-                      .filter(col => !['id', 'title', 'width', 'height', 'depth'].includes(col.key))
-                      .map(col => item[col.key] != null && (
-                        <Fragment key={col.key}>
-                          <div className={styles.label}>{col.label}:</div>
-                          <div>{renderCell(item, col)}</div>
-                        </Fragment>
-                      ))}
-                  </div>
-                </div>
-                {groupIdentical && hasIdenticalItems && <div className={styles.quantity}>{item.quantity || 1}</div>}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.tableContainer}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  {columns.map((column) => (
-                    <th
-                      key={column.key}
-                      onClick={() => handleSort(column.key)}
-                      className={styles.tableHeader}
-                    >
-                      <div className={styles.headerContent}>
-                        {/* {column.label} */}
-                        {(labelOptions[column.key] && labelOptions[column.key].shortName) || column.label}
-                        <SortIcon columnKey={column.key} />
+                <div className={styles.dimensions}>
+                  {['width', 'height', 'depth'].map(dim =>
+                    item[dim] != null && (
+                      <div key={dim} className={styles.dimension}>
+                        <span className={styles.dimensionLabel}>
+                          {dim[0].toUpperCase()}
+                        </span>
+                        <span className={styles.dimensionValue}>
+                          {item[dim]}
+                        </span>
                       </div>
-                    </th>
+                    )
+                  )}
+                </div>
+
+                <div className={styles.metadata}>
+                  {columns
+                    .filter(col => !['id', 'title', 'width', 'height', 'depth'].includes(col.key))
+                    .map(col => item[col.key] != null && (
+                      <Fragment key={col.key}>
+                        <div className={styles.label}>{col.label}:</div>
+                        <div>{renderCell(item, col)}</div>
+                      </Fragment>
+                    ))}
+                </div>
+              </div>
+              {groupIdentical && hasIdenticalItems && <div className={styles.quantity}>{item.quantity || 1}</div>}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                {columns.map((column) => (
+                  <th
+                    key={column.key}
+                    onClick={() => handleSort(column.key)}
+                    className={styles.tableHeader}
+                  >
+                    <div className={styles.headerContent}>
+                      {/* {column.label} */}
+                      {(labelOptions[column.key] && labelOptions[column.key].shortName) || column.label}
+                      <SortIcon columnKey={column.key} />
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {processedData && processedData.map((item) => (
+                <tr key={item.id}>
+                  {columns.map((column) => (
+                    <td key={`${item.id}-${column.key}`}>
+                      {renderCell(item, column)}
+                    </td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                  {processedData && processedData.map((item) => (
-                  <tr key={item.id}>
-                    {columns.map((column) => (
-                      <td key={`${item.id}-${column.key}`}>
-                        {renderCell(item, column)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
