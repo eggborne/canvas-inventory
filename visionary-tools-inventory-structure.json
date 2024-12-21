@@ -45,42 +45,42 @@
       "lines": 80
     },
     "App.css": {
-      "size": 1152,
+      "size": 1135,
       "type": "css",
-      "lastModified": "2024-12-15T05:34:12.655Z",
-      "lines": 75
+      "lastModified": "2024-12-21T00:09:52.766Z",
+      "lines": 71
     },
     "App.tsx": {
-      "size": 6526,
+      "size": 7655,
       "type": "tsx",
-      "lastModified": "2024-12-18T07:18:36.885Z",
-      "lines": 182
+      "lastModified": "2024-12-20T23:51:23.409Z",
+      "lines": 203
     },
     "assets": {},
     "components": {
       "DatabaseSelection.module.css": {
-        "size": 224,
+        "size": 2402,
         "type": "css",
-        "lastModified": "2024-12-18T07:17:21.259Z",
-        "lines": 14
+        "lastModified": "2024-12-21T00:18:09.943Z",
+        "lines": 123
       },
       "DatabaseSelection.tsx": {
-        "size": 1037,
+        "size": 1050,
         "type": "tsx",
-        "lastModified": "2024-12-18T07:16:36.251Z",
-        "lines": 31
+        "lastModified": "2024-12-21T00:16:04.951Z",
+        "lines": 33
       },
       "InventoryDisplay.module.css": {
-        "size": 1946,
+        "size": 4841,
         "type": "css",
-        "lastModified": "2024-12-18T04:49:54.611Z",
-        "lines": 129
+        "lastModified": "2024-12-21T00:19:45.837Z",
+        "lines": 288
       },
       "InventoryDisplay.tsx": {
-        "size": 7900,
+        "size": 13016,
         "type": "tsx",
-        "lastModified": "2024-12-18T07:21:00.416Z",
-        "lines": 259
+        "lastModified": "2024-12-21T00:20:48.829Z",
+        "lines": 373
       },
       "ThemeToggle.module.css": {
         "size": 1031,
@@ -96,10 +96,10 @@
       }
     },
     "fetch.ts": {
-      "size": 2374,
+      "size": 3177,
       "type": "ts",
-      "lastModified": "2024-12-18T05:22:17.605Z",
-      "lines": 83
+      "lastModified": "2024-12-20T07:58:23.063Z",
+      "lines": 106
     },
     "firebase.ts": {
       "size": 1480,
@@ -108,22 +108,22 @@
       "lines": 51
     },
     "index.css": {
-      "size": 2683,
+      "size": 2748,
       "type": "css",
-      "lastModified": "2024-12-18T07:05:12.533Z",
-      "lines": 159
+      "lastModified": "2024-12-20T23:44:31.152Z",
+      "lines": 162
     },
     "main.tsx": {
       "size": 230,
       "type": "tsx",
-      "lastModified": "2024-12-09T23:00:31.093Z",
+      "lastModified": "2024-12-20T07:20:20.210Z",
       "lines": 11
     },
     "types.ts": {
-      "size": 1536,
+      "size": 2022,
       "type": "ts",
-      "lastModified": "2024-12-18T06:38:57.439Z",
-      "lines": 73
+      "lastModified": "2024-12-20T08:32:27.944Z",
+      "lines": 97
     },
     "vite-env.d.ts": {
       "size": 38,
@@ -151,10 +151,10 @@
     "lines": 25
   },
   "visionary-tools-inventory-structure.json": {
-    "size": 3375,
+    "size": 3699,
     "type": "json",
-    "lastModified": "2024-12-18T05:34:56.460Z",
-    "lines": 153
+    "lastModified": "2024-12-18T07:23:46.481Z",
+    "lines": 165
   },
   "vite.config.ts": {
     "size": 183,
